@@ -67,25 +67,11 @@
             bindings = <&kp ESCAPE>;
         };
         
-        // Backspace on J+K (faster backspace)
-        bspc_combo {
-            timeout-ms = <30>;
-            key-positions = <31 32>;
-            bindings = <&kp BSPC>;
-        };
-        
         // Delete on U+I
         del_combo {
             timeout-ms = <30>;
             key-positions = <19 20>;
             bindings = <&kp DELETE>;
-        };
-        
-        // Tab on A+S
-        tab_combo {
-            timeout-ms = <30>;
-            key-positions = <25 26>;
-            bindings = <&kp TAB>;
         };
         
         // Enter on K+L
