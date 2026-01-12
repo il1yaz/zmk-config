@@ -6,7 +6,6 @@
  * Sofle Keyboard ZMK Configuration
  * Features:
  * - Standard QWERTY layout with dedicated layer keys on the thumbs
- * - Combo keys: Q+W=ESC, U+I=BSPC, J+K=DEL, A+S=TAB, K+L=ENTER
  * - Layers: LOWER (symbols/numbers), RAISE (navigation/media)
  * - Encoders: Left (Volume), Right (Page Up/Down on base, Brightness on layers)
  * - macOS screenshot shortcuts on RAISE layer
@@ -57,31 +56,6 @@
         };
     };
     
-    // Combo keys for common shortcuts
-    combos {
-        compatible = "zmk,combos";
-        // ESC on Q+W (escape from anywhere)
-        esc_combo {
-            timeout-ms = <30>;
-            key-positions = <13 14>;
-            bindings = <&kp ESCAPE>;
-        };
-        
-        // Delete on U+I
-        del_combo {
-            timeout-ms = <30>;
-            key-positions = <19 20>;
-            bindings = <&kp DELETE>;
-        };
-        
-        // Enter on K+L
-        enter_combo {
-            timeout-ms = <30>;
-            key-positions = <32 33>;
-            bindings = <&kp RET>;
-        };
-    };
-
     // Activate ADJUST layer by pressing raise and lower
     conditional_layers {
         compatible = "zmk,conditional-layers";
@@ -104,9 +78,9 @@
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
             // │ SHIFT │   A   │   S   │   D   │   F   │   G   │                         │   H   │   J   │   K   │   L   │   ;   │   '   │
             // ├───────┼───────┼───────┼───────┼───────┼───────┼───────┐         ┌───────┼───────┼───────┼───────┼───────┼───────┼───────┤
-            // │ CTRL  │   Z   │   X   │   C   │   V   │   B   │ MUTE  │         │       │   N   │   M   │   ,   │   .   │   /   │   \   │
+            // │ LCTRL │   Z   │   X   │   C   │   V   │   B   │ MUTE  │         │ NONE  │   N   │   M   │   ,   │   .   │   /   │   \   │
             // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┼───────┴───────┴───────┘
-            //                 │ CTRL  │  ALT  │  GUI  │LOWER  │ SPACE │         │ ENTER │ RAISE │  GUI  │  ALT  │ CTRL  │
+            //                 │ LCTRL │ LALT  │ LGUI  │LOWER  │ SPACE │         │ ENTER │ RAISE │ RGUI  │ RALT  │ RCTRL │
             //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
             bindings = <
 &kp ESCAPE        &kp N1        &kp N2              &kp N3            &kp N4          &kp N5                            &kp N6          &kp N7            &kp N8             &kp N9           &kp N0           &kp BSPC
@@ -125,18 +99,18 @@
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
             // │   `   │   !   │   @   │   #   │   $   │   %   │                         │   ^   │   &   │   *   │   (   │   )   │  F12  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │LGUI(`)│   -   │   _   │   +   │   =   │   {   │                         │   }   │   [   │   ]   │   :   │   \   │       │
+            // │ G+`   │   -   │   _   │   +   │   =   │   {   │                         │   }   │   [   │   ]   │   :   │   \   │ TRNS  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┼───────┐         ┌───────┼───────┼───────┼───────┼───────┼───────┼───────┤
-            // │       │       │       │       │       │       │       │         │       │       │       │       │       │       │       │
-            // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┴───────┴───────┘
-            //                 │       │       │       │       │       │         │       │       │       │       │       │
+            // │ G+SPC │  G+Z  │  G+X  │  G+C  │  G+V  │ CA<-  │ CA->  │         │ TRNS  │ SA<-  │ SA->  │ SA-BS │ TRNS  │ TRNS  │ TRNS  │
+            // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┴───────┴───────┘───────┘
+            //                 │ C+G+Q │ TRNS  │ TRNS  │ TRNS  │ TRNS  │         │ TRNS  │ TRNS  │ TRNS  │ BOOT  │
             //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┘
             bindings = <
 &kp LS(GRAVE)      &kp F1     &kp F2              &kp F3         &kp F4     &kp F5                       &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp GRAVE          &kp EXCL   &kp AT              &kp HASH       &kp DLLR   &kp PRCNT                    &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp F12
 &kp LG(GRAVE)      &kp MINUS  &kp LS(UNDERSCORE)  &kp PLUS       &kp EQUAL  &kp LBRC                     &kp RBRC   &kp LBKT  &kp RBKT   &kp COLON  &kp BSLH  &trans
-&trans             &kp LG(Z)  &kp LG(X)           &kp LG(C)      &kp LG(V)  &trans     &trans    &trans  &trans     &trans    &trans     &trans     &trans    &trans
-                              &trans              &trans         &trans     &trans     &trans    &trans  &trans     &trans    &trans     &trans
+&kp LG(SPACE)      &kp LG(Z)  &kp LG(X)           &kp LG(C)      &kp LG(V)  &kp LC(LA(LEFT))  &kp LC(LA(RIGHT))  &trans  &kp LS(LA(LEFT))  &kp LS(LA(RIGHT))  &kp LS(LA(BSPC))  &trans  &trans  &trans
+                              &kp LC(LG(Q))      &trans         &trans     &trans     &trans    &trans  &trans     &trans    &trans     &bootloader
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp C_BRIGHTNESS_INC C_BRIGHTNESS_DEC>;
@@ -145,21 +119,21 @@
         raise_layer {
             display-name = "raise";
             // ┌───────┬───────┬───────┬───────┬───────┬───────┐                         ┌───────┬───────┬───────┬───────┬───────┬───────┐
-            // │       │       │       │       │       │       │                         │  PREV │ PLAY  │ NEXT  │       │       │  DEL  │
+            // │  F13  │  F14  │ TRNS  │ TRNS  │ TRNS  │ TRNS  │                         │  PREV │ PLAY  │ NEXT  │ TRNS  │ TRNS  │  DEL  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │       │  INS  │ PSCR  │  GUI  │       │       │                         │ HOME  │ PGDN  │ PGUP  │  END  │   0   │       │
+            // │ CAPSCR│  INS  │ CPYARE│ CPYSCR│ TRNS  │ TRNS  │                         │ HOME  │ PGDN  │ PGUP  │  END  │   0   │ TRNS  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │       │  ALT  │ CTRL  │ SHIFT │       │ CAPS  │                         │  ←    │  ↓    │  ↑    │  →    │  DEL  │ BKSPC │
+            // │ TRNS  │  A<-  │ A-BS  │ A-DEL │  A->  │ CAPS  │                         │ LEFT  │ DOWN  │  UP   │ RIGHT │  DEL  │ BSPC  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┼───────┐         ┌───────┼───────┼───────┼───────┼───────┼───────┼───────┤
-            // │       │ UNDO  │  CUT  │ COPY  │ PASTE │       │MOUSE  │         │       │       │       │       │       │       │       │
+            // │ TRNS  │ UNDO  │  CUT  │ COPY  │ PASTE │   +   │ TRNS  │         │ TRNS  │  G+R  │  G+S  │  G+[  │  G+]  │ C+G+H │ TRNS  │
             // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┼───────┴───────┴───────┘
-            //                 │       │       │       │       │       │         │       │       │       │       │       │
+            //                 │ TRNS  │ TRNS  │ TRNS  │ TRNS  │ TRNS  │         │ TRNS  │ TRNS  │ TRNS  │ TRNS  │ TRNS  │
             //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
             bindings = <
-&trans  &trans        &trans         &trans           &trans        &trans                          &kp C_PREVIOUS  &kp C_PLAY_PAUSE  &kp C_NEXT  &trans     &trans   &kp DELETE
-&trans  &kp INS       &copy_area     &copy_screen      &trans        &trans                          &kp HOME        &kp PG_DN         &kp PG_UP   &kp END    &kp N0   &trans
+&kp F13  &kp F14      &trans         &trans           &trans        &trans                          &kp C_PREVIOUS  &kp C_PLAY_PAUSE  &kp C_NEXT  &trans     &trans   &kp DELETE
+&cap_screen  &kp INS       &copy_area     &copy_screen      &trans        &trans                          &kp HOME        &kp PG_DN         &kp PG_UP   &kp END    &kp N0   &trans
 &trans  &kp LA(LEFT)  &kp LA(BSPC)   &kp LA(DELETE)   &kp LA(RIGHT) &kp CLCK                        &kp LEFT        &kp DOWN          &kp UP      &kp RIGHT  &kp DEL  &kp BSPC
-&trans  &kp K_UNDO    &kp K_CUT      &kp K_COPY       &kp K_PASTE   &kp PLUS      &trans &trans  &trans          &trans            &trans      &trans     &trans   &trans
+&trans  &kp K_UNDO    &kp K_CUT      &kp K_COPY       &kp K_PASTE   &kp PLUS      &trans &trans  &kp LG(R)        &kp LG(S)         &kp LG(LBKT)      &kp LG(RBKT)     &kp LC(LG(H))      &trans
                       &trans         &trans           &trans        &trans        &trans    &trans  &trans          &trans            &trans      &trans
             >;
 
@@ -169,15 +143,15 @@
         adjust_layer {
             display-name = "adjust";
             // ┌───────┬───────┬───────┬───────┬───────┬───────┐                         ┌───────┬───────┬───────┬───────┬───────┬───────┐
-            // │ BTCLR │  BT1  │  BT2  │  BT3  │  BT4  │  BT5  │                         │       │       │       │       │       │       │
+            // │ BTCLR │  BT1  │  BT2  │  BT3  │  BT4  │  BT5  │                         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │EXTPWR │RGB HUD│RGB HUI│RGB SAD│RGB SAI│RGB EFF│                         │       │       │       │       │       │       │
+            // │EXTPWR │RGBHUD │RGBHUI │RGBSAD │RGBSAI │RGBEFF │                         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │UNLOCK │RGB BRD│RGB BRI│       │       │       │                         │       │       │       │       │       │       │
+            // │UNLOCK │RGBBRD │RGBBRI │ NONE  │ NONE  │ NONE  │                         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
             // ├───────┼───────┼───────┼───────┼───────┼───────┼───────┐         ┌───────┼───────┼───────┼───────┼───────┼───────┼───────┤
-            // │       │       │       │       │       │       │RGB TOG│         │       │       │       │       │       │       │       │
+            // │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │RGBTOG │         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
             // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┼───────┴───────┴───────┘
-            //                 │       │       │       │       │       │         │       │       │       │       │       │
+            //                 │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
             //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
             bindings = <
 &bt BT_CLR         &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4                               &none  &none  &none  &none  &none  &none
