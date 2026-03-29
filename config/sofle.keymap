@@ -13,10 +13,12 @@
  */
 
 #include <behaviors.dtsi>
+#include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/pointing.h>
 
 #define BASE    0
 #define LOWER   1
@@ -24,6 +26,7 @@
 #define ADJUST  3
 #define NVIM    4
 #define HRMTEST 5
+#define MOUSE   6
 
 /{
     behaviors {
@@ -166,7 +169,7 @@
 &kp ESCAPE        &kp N1        &kp N2              &kp N3            &kp N4          &kp N5                            &kp N6          &kp N7            &kp N8             &kp N9           &kp N0           &kp BSPC
 &kp TAB           &kp Q         &kp W               &kp E             &kp R           &kp T                             &kp Y           &kp U             &kp I              &kp O            &kp P            &kp LEFT_BRACKET
 &kp LSHFT         &kp A         &kp S               &kp D             &kp F           &kp G                             &kp H           &kp J             &kp K              &kp L            &kp SEMI          &kp SQT
-&kp LCTRL         &kp Z         &kp X               &kp C             &kp V           &kp B      &kp C_MUTE    &none    &kp N           &kp M             &kp COMMA          &kp DOT          &kp FSLH          &kp BSLH
+&kp LCTRL         &kp Z         &kp X               &kp C             &kp V           &kp B      &kp C_MUTE    &tog MOUSE  &kp N           &kp M             &kp COMMA          &kp DOT          &kp FSLH          &kp BSLH
 &kp LCTRL  &kp LALT  &kp LGUI  &mo LOWER  &kp SPACE     &kp RET  &mo RAISE  &mo NVIM  &kp RALT   &kp RCTRL            >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -234,7 +237,7 @@
             //                 │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
             //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
             bindings = <
-&bt BT_CLR         &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4                               &none  &none  &none  &none  &none  &none
+&bt BT_CLR         &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4                               &none  &none  &none  &none  &none  &to BASE
 &ext_power EP_TOG  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_EFF                            &none  &type_text  &none  &none  &none  &none
 &studio_unlock     &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &none            &none            &tog HRMTEST                               &none  &none  &none  &none  &none  &none
 &none              &none            &none            &none            &none            &none            &rgb_ug RGB_TOG    &none  &none  &none  &none  &none  &none  &none
@@ -255,7 +258,7 @@
             // │ NONE  │  u    │  dd   │  yy   │  p    │  gT   │ NONE  │         │ NONE  │  n    │  S-G  │  S-N  │ NONE  │ NONE  │ NONE  │
             // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┼───────┴───────┴───────┘
             //                 │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
-            //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
+            //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────
             bindings = <
 &none          &none        &none        &none        &none        &none                                &none        &none        &none        &none        &none        &none
 &none          &vim_quit    &vim_save    &nav_k       &kp LC(R)    &vim_gt                              &vim_yy      &kp LC(U)    &kp LC(I)    &kp LC(O)    &kp P        &none
@@ -267,27 +270,43 @@
 
         hrmtest_layer {
             display-name = "hrm";
-            // Same as BASE but with home row mods: A=GUI S=ALT D=CTRL F=SHIFT | J=SHIFT K=CTRL L=ALT ;=GUI
+            // Transparent overlay — only overrides home row with hold-tap mods
+            // Everything else falls through to BASE (or LOWER/RAISE/ADJUST when active)
             // Toggle on/off via ADJUST layer (LOWER+RAISE+G)
-            // ┌───────┬───────┬───────┬───────┬───────┬───────┐                         ┌───────┬───────┬───────┬───────┬───────┬───────┐
-            // │  ESC  │   1   │   2   │   3   │   4   │   5   │                         │   6   │   7   │   8   │   9   │   0   │ BKSPC │
-            // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │  TAB  │   Q   │   W   │   E   │   R   │   T   │                         │   Y   │   U   │   I   │   O   │   P   │   [   │
-            // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
-            // │ SHIFT │ A/GUI │ S/ALT │D/CTRL │F/SHFT │   G   │                         │   H   │J/SHFT │K/CTRL │ L/ALT │;/GUI  │   '   │
-            // ├───────┼───────┼───────┼───────┼───────┼───────┼───────┐         ┌───────┼───────┼───────┼───────┼───────┼───────┼───────┤
-            // │ LCTRL │   Z   │   X   │   C   │   V   │   B   │ MUTE  │         │ NONE  │   N   │   M   │   ,   │   .   │   /   │   \   │
-            // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┼───────┴───────┴───────┘
-            //                 │ LCTRL │ LALT  │ LGUI  │LOWER  │ SPACE │         │ ENTER │ RAISE │ RGUI  │ RALT  │ RCTRL │
-            //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
+            // Home row: A=GUI S=ALT D=CTRL F=SHIFT | J=SHIFT K=CTRL L=ALT ;=GUI
             bindings = <
-&kp ESCAPE        &kp N1            &kp N2            &kp N3             &kp N4             &kp N5                            &kp N6          &kp N7             &kp N8              &kp N9            &kp N0              &kp BSPC
-&kp TAB           &kp Q             &kp W             &kp E              &kp R              &kp T                             &kp Y           &kp U              &kp I               &kp O             &kp P               &kp LEFT_BRACKET
-&kp LSHFT         &hm LGUI A        &hm LALT S        &hm LCTRL D        &hm LSHFT F        &kp G                             &kp H           &hm RSHFT J        &hm RCTRL K         &hm RALT L        &hm RGUI SEMI       &kp SQT
-&kp LCTRL         &kp Z             &kp X             &kp C              &kp V              &kp B      &kp C_MUTE    &none    &kp N           &kp M              &kp COMMA           &kp DOT           &kp FSLH            &kp BSLH
-&kp LCTRL  &kp LALT  &kp LGUI  &mo LOWER  &kp SPACE     &kp RET  &mo RAISE  &mo NVIM  &kp RALT   &kp RCTRL            >;
+&trans         &trans            &trans            &trans             &trans             &trans                               &trans          &trans             &trans              &trans            &trans              &trans
+&trans         &trans            &trans            &trans             &trans             &trans                               &trans          &trans             &trans              &trans            &trans              &trans
+&trans         &hm LGUI A        &hm LALT S        &hm LCTRL D        &hm LSHFT F        &trans                               &trans          &hm RSHFT J        &hm RCTRL K         &hm RALT L        &hm RGUI SEMI       &trans
+&trans         &trans            &trans            &trans             &trans             &trans      &trans        &trans     &trans          &trans             &trans              &trans            &trans              &trans
+               &trans  &trans  &trans  &trans     &trans  &trans  &trans  &trans   &trans            >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
+        };
+
+        mouse_layer {
+            display-name = "mouse";
+            // Hold right encoder to enter | Scroll on HJKL, clicks on left hand, cursor move on ESDF
+            // ┌───────┬───────┬───────┬───────┬───────┬───────┐                         ┌───────┬───────┬───────┬───────┬───────┬───────┐
+            // │toBase │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │                         │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │
+            // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
+            // │ NONE  │ NONE  │ NONE  │MV UP  │ NONE  │ NONE  │                         │ NONE  │SCR UP │ MCLK  │SCR DN │ NONE  │ NONE  │
+            // ├───────┼───────┼───────┼───────┼───────┼───────┤                         ├───────┼───────┼───────┼───────┼───────┼───────┤
+            // │ NONE  │ NONE  │MV LFT │MV DN  │MV RGT │ NONE  │                         │SCR LFT│SCR DN │SCR UP │SCR RGT│ NONE  │ NONE  │
+            // ├───────┼───────┼───────┼───────┼───────┼───────┼───────┐         ┌───────┼───────┼───────┼───────┼───────┼───────┼───────┤
+            // │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │ NONE  │         │ TRNS  │  MB4  │  MB5  │ NONE  │ NONE  │ NONE  │ NONE  │
+            // └───────┴───────┼───────┼───────┼───────┼───────┼───────┤         ├───────┼───────┼───────┼───────┼───────┴───────┴───────┘
+            //                 │ NONE  │ NONE  │ RCLK  │ LCLK  │ MCLK  │         │ LCLK  │ RCLK  │ NONE  │ NONE  │ NONE  │
+            //                 └───────┴───────┴───────┴───────┴───────┘         └───────┴───────┴───────┴───────┴───────┘
+            bindings = <
+&to BASE       &none        &none        &none              &none              &none                                    &none              &none              &none          &none              &none        &none
+&none          &none        &none        &mmv MOVE_UP       &none              &none                                    &none              &msc SCRL_UP       &mkp MCLK      &msc SCRL_DOWN     &none        &none
+&none          &none        &mmv MOVE_LEFT &mmv MOVE_DOWN   &mmv MOVE_RIGHT    &none                                    &msc SCRL_LEFT     &msc SCRL_DOWN     &msc SCRL_UP   &msc SCRL_RIGHT    &none        &none
+&none          &none        &none        &none              &none              &none        &none        &trans          &mkp MB4           &mkp MB5           &none          &none              &none        &none
+                            &none        &none              &mkp RCLK          &mkp LCLK    &mkp MCLK    &mkp LCLK       &mkp RCLK          &none              &none          &none
+            >;
+
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
     };
 };
